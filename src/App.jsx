@@ -1,7 +1,9 @@
 import './App.css'
 
 import AddTask from './components/AddTasks';
+import Footer from './components/Footer';
 import GridTask from './components/GridTasks';
+
 
 const tasks = [
   {
@@ -43,6 +45,7 @@ function App() {
       <AddTask tasks={tasks}/>
       <h1>Tasks list</h1>
       <GridTask tasks={tasks}/>
+      <Footer/>
     </>
   )
 }
