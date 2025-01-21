@@ -1,67 +1,49 @@
 import './App.css'
-import { FaRegCheckCircle,FaRegTrashAlt } from "react-icons/fa";
 
-function AddTask(){
-  return(
-    <div className='formDiv'>
-      <form>
-        <div>
-        <label className='lblTitleTask'>Title</label><br/>
-        <input type='text' className='txtTitleTask' id='txtTitleTask' placeholder='Title' required/>
-        </div>
-        <div>
-        <label className='lblCommentTask'>Comment</label><br/>
-        <textarea id='txtCommnetTask' className='txtCommnetTask' rows="5" cols="55"></textarea>
-        </div>
-        <div>
-        <label className='lblStatusTask'>Status</label><br/>
-        <select className='slStatusTask' id='slStatusTask'>
-          <option value={""}>Select</option>
-          <option value={"completed"}>Completed</option>
-          <option value={"in progress"}>In progress</option>
-          <option value={"pending"}>Pending</option>
-        </select>
-        <button className='buttonAdd' type='button'>Add Task</button>
-        </div>
-      </form>
-    </div>
-  )
-}
+import AddTask from './components/AddTasks';
+import GridTask from './components/GridTasks';
 
-function GridTask(){
-  return(
-    <>
-    <h1>Task list</h1>
-    <table className='tableList'>
-      <tr>
-        <th>Title</th>
-        <th>Comment</th>
-        <th>Status</th>
-        <th></th>
-      </tr>
-      <tr>
-        <td>Task001</td>
-        <td>asdf asdf asf</td>
-        <td>In progress</td>
-        <td>
-          <li className='doneTask'><FaRegCheckCircle /></li>
-          <li className='deleteTask'><FaRegTrashAlt /></li>
-        </td>
-      </tr>
-    </table>
-    </>
-  )
-}
+const tasks = [
+  {
+    "id": 1,
+    "status": "completed",
+    "title": "Task 1",
+    "comment": "This task was completed successfully"
+  },
+  {
+    "id": 2,
+    "status": "in progress",
+    "title": "Task 2",
+    "comment": "Currently working on this task"
+  },
+  {
+    "id": 3,
+    "status": "pending",
+    "title": "Task 3",
+    "comment": "This task is yet to be started"
+  },
+  {
+    "id": 4,
+    "status": "completed",
+    "title": "Task 4",
+    "comment": "Task completed ahead of schedule"
+  },
+  {
+    "id": 5,
+    "status": "in progress",
+    "title": "Task 5",
+    "comment": "Experiencing some delays with this task"
+  }
+];
 
 function App() {
-
   return (
     <>
-      <h1>Task list</h1>
-      <AddTask/>
-      <GridTask/>
+      <h1>Tasks</h1>
+      <AddTask tasks={tasks}/>
+      <h1>Tasks list</h1>
+      <GridTask tasks={tasks}/>
     </>
   )
 }
-
 export default App
