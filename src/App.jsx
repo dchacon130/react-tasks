@@ -1,50 +1,54 @@
 import './App.css'
+import { useEffect, useState } from 'react';
 
+import tasksService from './services/tasks';
 import AddTask from './components/AddTasks';
 import Footer from './components/Footer';
-import GridTask from './components/GridTasks';
-
-
-const tasks = [
-  {
-    "id": 1,
-    "status": "completed",
-    "title": "Task 1",
-    "comment": "This task was completed successfully"
-  },
-  {
-    "id": 2,
-    "status": "in progress",
-    "title": "Task 2",
-    "comment": "Currently working on this task"
-  },
-  {
-    "id": 3,
-    "status": "pending",
-    "title": "Task 3",
-    "comment": "This task is yet to be started"
-  },
-  {
-    "id": 4,
-    "status": "completed",
-    "title": "Task 4",
-    "comment": "Task completed ahead of schedule"
-  },
-  {
-    "id": 5,
-    "status": "in progress",
-    "title": "Task 5",
-    "comment": "Experiencing some delays with this task"
-  }
-];
 
 function App() {
+
+  const [tasks, setTasks] = useState([]);
+  const [count, setCount] = useState(0);
+    
+    useEffect(()=> {
+        tasksService.getAll().then(response => {
+        setTasks(response);
+      })
+    }, []);  
+
+    const cantidadRegistros = tasks;
+
+    const addTask = (newTask) => { 
+      setTasks(tasks.concat(newTask));
+    }
+
   return (
     <>
       <h1>Tasks</h1>
-      <AddTask tasks={tasks}/>
+        <AddTask onTaskToAdd={addTask} onQuantityTask={cantidadRegistros}/>
       <h1>Tasks list</h1>
-      <GridTask tasks={tasks}/>
+      <table className='tableList'>
+        <thead>
+          <tr>
+            <th scope='col'>Id</th>
+            <th scope='col'>Title</th>
+            <th scope='col'>Comment</th>
+            <th scope='col'>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+            {
+              tasks.map(task => (
+              <tr key={task.id}>
+                <th scope='row'>{task.id}</th>
+                <td>{task.title}</td>
+                <td>{task.comment}</td>
+                <td>{task.status}</td>
+              </tr>
+              ))
+            }    
+        </tbody>
+      </table>
       <Footer/>
     </>
   )

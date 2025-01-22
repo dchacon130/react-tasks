@@ -1,41 +1,61 @@
 import React, { useState } from "react";
+import tasksService from '../services/tasks';
 
 const AddTask = (props) => {
+  const [title, setTitle] = useState('');
+  const [comment, setComment] = useState('');
+  const [status, setStatus] = useState('');
 
-  const [ tasks, setTasks ] = useState(props.tasks);
-  const [ title, setTitle ] = useState('');
-  const [ comment, setComment ] = useState('');
-
-  const addNewTask = (event) => {
+  const addTask = (event) => {
     event.preventDefault();
-    const NewObject = {
-      id: tasks.lenght + 1,
-      title: title,
-      comment: comment,
-      
+    const taksObject = {
+      id: props.onQuantityTask,
+      title: title, 
+      comment: comment, 
+      status: status
     }
+    tasksService.create(taksObject).then(response => {
+      console.log(response);
+      props.onTaskToAdd(response);
+    })
   }
 
   return(
     <div className='formDiv'>
-      <form>
+      <form onSubmit={addTask}>
         <div>
-        <label className='lblTitleTask'>Title</label><br/>
-        <input type='text' className='txtTitleTask' id='txtTitleTask' placeholder='Title' required/>
+          <label htmlFor="title">Title</label><br/>
+          <input 
+            type='text' 
+            className='txtTitleTask' 
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder='Title' 
+            required/>
         </div>
         <div>
-        <label className='lblCommentTask'>Comment</label><br/>
-        <textarea id='txtCommnetTask' value={setComment} className='txtCommnetTask' rows="5" cols="55"></textarea>
+          <label htmlFor='comment'>Comment</label><br/>
+          <textarea 
+            id="comment"
+            className='txtCommnetTask' 
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            rows="5" 
+            cols="55"></textarea>
         </div>
         <div>
-        <label className='lblStatusTask'>Status</label><br/>
-        <select className='slStatusTask' id='slStatusTask'>
-          <option value={""}>Select</option>
-          <option value={"completed"}>Completed</option>
-          <option value={"in progress"}>In progress</option>
-          <option value={"pending"}>Pending</option>
-        </select>
-        <button className='buttonAdd' type='button'>Add Task</button>
+          <label htmlFor='status'>Status</label><br/>
+          <select 
+            className='slStatusTask' 
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            required>
+            <option value={""}>Select status</option>
+            <option value={"completed"}>Completed</option>
+            <option value={"in progress"}>In progress</option>
+            <option value={"pending"}>Pending</option>
+          </select>
+          <button className='buttonAdd' type='submit'>Add Task</button>
         </div>
       </form>
     </div>
