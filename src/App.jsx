@@ -8,7 +8,7 @@ import Footer from './components/Footer';
 function App() {
 
   const [tasks, setTasks] = useState([]);
-  const [count, setCount] = useState(0);
+  const [saveOk, setSaveOk] = useState(null);
     
     useEffect(()=> {
         tasksService.getAll().then(response => {
@@ -18,6 +18,13 @@ function App() {
 
     const cantidadRegistros = tasks;
 
+    const mostrarSaveOk = () => {
+      setSaveOk('The task was saved successfully');
+      setTimeout(()=> {
+        setSaveOk(null);
+      }, 5000);
+    }
+
     const addTask = (newTask) => { 
       setTasks(tasks.concat(newTask));
     }
@@ -25,8 +32,11 @@ function App() {
   return (
     <>
       <h1>Tasks</h1>
-        <AddTask onTaskToAdd={addTask} onQuantityTask={cantidadRegistros}/>
+        <AddTask onTaskToAdd={addTask} onQuantityTask={cantidadRegistros} onTaskCreated={mostrarSaveOk}/>
       <h1>Tasks list</h1>
+      <div>
+        {saveOk && <div className='save-ok'>{saveOk}</div>}
+      </div>
       <table className='tableList'>
         <thead>
           <tr>

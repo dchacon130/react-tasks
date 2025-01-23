@@ -16,8 +16,9 @@ const AddTask = (props) => {
     }
     tasksService.create(taksObject).then(response => {
       console.log(response);
+      props.onTaskCreated();
       props.onTaskToAdd(response);
-    })
+    });
   }
 
   return(
