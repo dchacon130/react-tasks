@@ -4,24 +4,42 @@ import { useEffect, useState } from 'react';
 import tasksService from './services/tasks';
 import AddTask from './components/AddTasks';
 import Footer from './components/Footer';
+import Notification from './components/Notification';
+import Delete from './components/Delete';
 
 function App() {
-
   const [tasks, setTasks] = useState([]);
-  const [saveOk, setSaveOk] = useState(null);
+  const [warningMessage, SetWarningMessage] = useState(null);
+  const [warningMessageDelete, SetWarningMessageDelete] = useState(null);
     
-    useEffect(()=> {
-        tasksService.getAll().then(response => {
-        setTasks(response);
-      })
-    }, []);  
+  useEffect(() => {
+    const fetchData = async () => {
+      try{
+        const res = await tasksService.getAll();
+        if(res.success){
+          setTasks(res.data);
+        }else{
+          console.error(res.error)
+        }
+      }catch(error){
+        console.error('Error al obtener las tareas');
+      };
+    }
+      fetchData();
+  },[]);
 
-    const cantidadRegistros = tasks;
+  const messageOK = (message) => {
+    console.log(message);
+    SetWarningMessage(message);
+    setTimeout(()=> {
+      SetWarningMessage(null);
+    }, 5000);
+  }
 
-    const mostrarSaveOk = () => {
-      setSaveOk('The task was saved successfully');
+    const mostrarDeleteOk = () => {
+      SetWarningMessageDelete('The task was Deleted successfully');
       setTimeout(()=> {
-        setSaveOk(null);
+        SetWarningMessageDelete(null);
       }, 5000);
     }
 
@@ -32,10 +50,13 @@ function App() {
   return (
     <>
       <h1>Tasks</h1>
-        <AddTask onTaskToAdd={addTask} onQuantityTask={cantidadRegistros} onTaskCreated={mostrarSaveOk}/>
+        <AddTask onTaskToAdd={addTask}
+                 tasks={tasks}
+                 onTaskCreated={messageOK}
+                  />
       <h1>Tasks list</h1>
       <div>
-        {saveOk && <div className='save-ok'>{saveOk}</div>}
+        {warningMessage && (<Notification message={warningMessage}/>)}
       </div>
       <table className='tableList'>
         <thead>
@@ -44,6 +65,7 @@ function App() {
             <th scope='col'>Title</th>
             <th scope='col'>Comment</th>
             <th scope='col'>Status</th>
+            <th scope='col'>Delete</th> 
           </tr>
         </thead>
         <tbody>
@@ -54,6 +76,9 @@ function App() {
                 <td>{task.title}</td>
                 <td>{task.comment}</td>
                 <td>{task.status}</td>
+                <td><Delete 
+                  taskId={task.id} 
+                  onTaskToDelete={mostrarDeleteOk}/></td>
               </tr>
               ))
             }    

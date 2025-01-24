@@ -6,19 +6,28 @@ const AddTask = (props) => {
   const [comment, setComment] = useState('');
   const [status, setStatus] = useState('');
 
-  const addTask = (event) => {
+  
+  const addTask = async (event) => {
     event.preventDefault();
-    const taksObject = {
-      id: props.onQuantityTask,
+    const tasksObject = {
       title: title, 
       comment: comment, 
       status: status
     }
-    tasksService.create(taksObject).then(response => {
-      console.log(response);
-      props.onTaskCreated();
-      props.onTaskToAdd(response);
-    });
+    try{
+      const res = await tasksService.postCreate(tasksObject);
+      if(res.success){
+        setTitle('');
+        setComment('');
+        setStatus('');
+        props.onTaskToAdd(res.data);
+        props.onTaskCreated(res.message);
+      }else{
+        console.error(res.error)
+      }
+    }catch(error){
+      console.error('No es posible guardar la tarea', error);
+    }
   }
 
   return(
